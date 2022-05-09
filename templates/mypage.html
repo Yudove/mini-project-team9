@@ -94,24 +94,28 @@
                 success: function (response) {
                     let rows = response["RealtimeCityAir"]["row"];
 
-                    let num=rows[i][];
-                    let title=rows[i][];
-                    let img=rows[i][];
-                    let artist=rows[i][];
+                    for (let i=0;i<rows.length;i++){
+                        let num=rows[i][];
+                        let title=rows[i][];
+                        let img=rows[i][];
+                        let artist=rows[i][];
 
-                    let star_image='⭐'.repeat(star)
+                        let star_image='⭐'.repeat(star)
 
-                    let temp_html=`<tr>
-                                        <th scope="row">${num}</th>
-                                        <td><img
-                                                src="${img}"
-                                                class="card-img-top" alt="..."></td>
-                                        <td>${title}</td>
-                                        <td>${artist}</td>
-                                        <td>${star_image}</td>
-                                   </tr>`
+                        let temp_html=`<tr>
+                                            <th scope="row">${num}</th>
+                                            <td><img
+                                                    src="${img}"
+                                                    class="card-img-top" alt="..."></td>
+                                            <td>${title}</td>
+                                            <td>${artist}</td>
+                                            <td>${star_image}</td>
+                                       </tr>`
 
-                    $('#song-list').append(temp_html);
+                        $('#song-list').append(temp_html);
+                    }
+
+
                 }
             })
         }
