@@ -5,6 +5,37 @@ from pymongo import MongoClient
 client = MongoClient('mongodb+srv://test:sparta@cluster0.p2v10.mongodb.net/Cluster0?retryWrites=true&w=majority')
 db = client.dbsparta
 
+import requests
+from bs4 import BeautifulSoup
+
+headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+data = requests.get('https://www.genie.co.kr/chart/top200',headers=headers)
+
+soup = BeautifulSoup(data.text, 'html.parser')
+
+#body-content > div.newest-list > div > table > tbody > tr:nth-child(1)
+
+#body-content > div.newest-list > div > table > tbody > tr:nth-child(1) > td.info > a.title.ellipsis
+#body-content > div.newest-list > div > table > tbody > tr:nth-child(1) > td.info > a.artist.ellipsis
+#body-content > div.newest-list > div > table > tbody > tr:nth-child(1) > td.info > a.albumtitle.ellipsis
+#body-content > div.newest-list > div > table > tbody > tr:nth-child(1) > td:nth-child(3) > a > img
+
+musics = soup.select('#body-content > div.newest-list > div > table > tbody > tr')
+
+for music in musics:
+    a = music.select_one('td.info > a.title.ellipsis').text
+    singer = music.select_one('td.info > a.artist.ellipsis').text
+    album = music.select_one('td.info > a.albumtitle.ellipsis').text
+    cover = music.select_one('td:nth-child(3) > a > img')['src']
+    print(a, singer, album, cover)
+
+    doc = {
+        'title': a,
+        'singer': singer,
+        'album': album,
+        'cover': cover
+    }
+    db.musics.insert_one(doc)
 
 # 코딩 시작
 
