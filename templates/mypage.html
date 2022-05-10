@@ -50,7 +50,7 @@
         }
 
         .mylike{
-            width:900px;
+            width:1100px;
 
             font-size: 30px;
 
@@ -80,12 +80,11 @@
             window.location.href="/music/${musicId}"
         }
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script>
         $(document).ready(function () {
             get_list()
         })
 
+        //붙이기 코드
         function get_list() {
             // $('#song-list').empty();
             $.ajax({
@@ -93,25 +92,27 @@
                 url: "/playlist",
                 data: {},
                 success: function (response) {
-                    let playlist = response['playlist'];
+                    let pli = response['playlist'];
 
-                    for (let i=0;i<playlist.length;i++){
-                        let num=playlist[i][a];
-                        let title=playlist[i]['title'];
-                        let singer=playlist[i]['singer'];
-                        let albumtitles=playlist[i]['albumtitles'];
+                    for (let i=0;i<pli.length;i++){
+                        // let num=pli[i][a];
+                        let title=pli[i]['title'];
+                        let singer=pli[i]['singer'];
+                        let albumtitles=pli[i]['albumtitles'];
+                        let image=pli[i]['image'];
+
+                        console.log(image,title,singer,albumtitles);
 
                         // let star_image='⭐'.repeat(star)
 
                         let temp_html=`<tr>
-                                            <th scope="row">${num}</th>
-                                            <td><img
-                                                    src="${img}"
+<!--                                            <th scope="row">${num}</th>-->
+                                            <td><img src="${image}"
                                                     class="card-img-top" alt="..."></td>
                                             <td>${title}</td>
                                             <td>${singer}</td>
                                             <td>${albumtitles}</td>
-<!--                                            // <td>${star_image}</td>-->
+<!--                                            <td>${star_image}</td>-->
                                        </tr>`
 
                         $('#song-list').append(temp_html);
@@ -119,7 +120,6 @@
                 }
             })
         }
-    </script>
     </script>
 </head>
 <body>
@@ -129,12 +129,13 @@
         <button type="button" class="btn btn-primary main_button">돌아가기</button>
         <div>
         <div class="mylike">
-<!--            밑에 내가 추가한 아티스트목록-->
+<!--            밑에 내가 추가한 노래 목록-->
             <table class="table" id="song-list">
                 <thead>
                 <tr>
-                    <th scope="col">NO.</th>
+<!--                    <th scope="col">NO.</th>-->
                     <th scope="col">커버</th>
+                    <th scope="col">제목</th>
                     <th scope="col">아티스트</th>
                     <th scope="col">앨범명</th>
 <!--                    <th scope="col">⭐</th>-->
@@ -142,20 +143,23 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <th scope="row">1</th>
+<!--                    <th scope="row">1</th>-->
                     <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/662/688/82662688_1651196114166_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
-                    <td>MSG워너비</td>
+                    <td>That That (Prod. & Feat. SUGA of BTS)</td>
+                    <td>싸이 (Psy) </td>
                     <td>싸다9</td>
                 </tr>
                 <tr>
-                    <th scope="row">2</th>
+<!--                    <th scope="row">2</th>-->
                     <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/624/911/82624911_1649062753955_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
-                    <td>에스파</td>
+                    <td>봄여름가을겨울 (Still Life)</td>
+                    <td>BIGBANG (빅뱅)</td>
                     <td>봄여름가을겨울 (Still Life)</td>
                 </tr>
                 <tr>
-                    <th scope="row">3</th>
+<!--                    <th scope="row">3</th>-->
                     <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/624/363/82624363_1649123068092_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
+                    <td>LOVE DIVE</td>
                     <td>IVE (아이브)</td>
                     <td>LOVE DIVE</td>
                 </tr>
@@ -165,41 +169,5 @@
         </div>
     </div>
 
-
-<!--<script>-->
-<!--    function() {-->
-<!--      var ws = new WebSocket('ws://' + window.location.host + '/jb-server-page?reloadServiceClientId=5');-->
-<!--      ws.onmessage = function (msg) {-->
-<!--          if (msg.data === 'reload') {-->
-<!--              window.location.reload();-->
-<!--          }-->
-<!--          if (msg.data.startsWith('update-css ')) {-->
-<!--              var messageId = msg.data.substring(11);-->
-<!--              var links = document.getElementsByTagName('link');-->
-<!--              for (var i = 0; i < links.length; i++) {-->
-<!--                  var link = links[i];-->
-<!--                  if (link.rel !== 'stylesheet') continue;-->
-<!--                  var clonedLink = link.cloneNode(true);-->
-<!--                  var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);-->
-<!--                  if (newHref !== link.href) {-->
-<!--                    clonedLink.href = newHref;-->
-<!--                  }-->
-<!--                  else {-->
-<!--                    var indexOfQuest = newHref.indexOf('?');-->
-<!--                    if (indexOfQuest >= 0) {-->
-<!--                      // to support ?foo#hash-->
-<!--                      clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' +-->
-<!--                                        newHref.substring(indexOfQuest + 1);-->
-<!--                    }-->
-<!--                    else {-->
-<!--                      clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;-->
-<!--                    }-->
-<!--                  }-->
-<!--                  link.replaceWith(clonedLink);-->
-<!--              }-->
-<!--          }-->
-<!--      };-->
-<!--};-->
-<!--</script>-->
 </body>
 </html>
