@@ -86,33 +86,26 @@
 
         //붙이기 코드
         function get_list() {
-            // $('#song-list').empty();
+            $('#song-list').empty();
             $.ajax({
                 type: "GET",
                 url: "/playlist",
                 data: {},
                 success: function (response) {
                     let pli = response['playlist'];
-
-                    for (let i=0;i<pli.length;i++){
-                        // let num=pli[i][a];
+                    for (let i=0; i<pli.length; i++){
                         let title=pli[i]['title'];
                         let singer=pli[i]['singer'];
-                        let albumtitles=pli[i]['albumtitles'];
-                        let image=pli[i]['image'];
+                        let album=pli[i]['album'];
+                        let cover=pli[i]['cover'];
 
-                        console.log(image,title,singer,albumtitles);
-
+                        console.log(cover,title,singer,album);
                         // let star_image='⭐'.repeat(star)
-
                         let temp_html=`<tr>
-<!--                                            <th scope="row">${num}</th>-->
-                                            <td><img src="${image}"
-                                                    class="card-img-top" alt="..."></td>
+                                            <td><img src="${cover}" class="card-img-top" alt="..."></td>
                                             <td>${title}</td>
                                             <td>${singer}</td>
-                                            <td>${albumtitles}</td>
-<!--                                            <td>${star_image}</td>-->
+                                            <td>${album}</td>
                                        </tr>`
 
                         $('#song-list').append(temp_html);
@@ -128,9 +121,9 @@
         <div class="mypage">마이 페이지</div>
         <button type="button" class="btn btn-primary main_button">돌아가기</button>
         <div>
-        <div class="mylike">
+        <div class="mylike"  >
 <!--            밑에 내가 추가한 노래 목록-->
-            <table class="table" id="song-list">
+            <table class="table"  >
                 <thead>
                 <tr>
 <!--                    <th scope="col">NO.</th>-->
@@ -141,7 +134,7 @@
 <!--                    <th scope="col">⭐</th>-->
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="song-list">
                 <tr>
 <!--                    <th scope="row">1</th>-->
                     <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/662/688/82662688_1651196114166_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
