@@ -12,17 +12,84 @@
             crossorigin="anonymous"></script>
 
     <title>로그인</title>
-    <link rel="stylesheet" type="text/css" href = "../static/detailstyle.css">
+    <link rel="stylesheet" type="text/css" href="../static/detailstyle.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
 
 
-
-       $(document).ready(function () {
+        $(document).ready(function () {
             add();
-
+            image()
+            listing();
         });
+
+        function image() {
+            $.ajax({
+                type: "GET",
+                url: "/detail",
+                data: {},
+                success: function (response) {
+                    let rows = response['musics']
+                    for (let i = 0; i < rows.length; i++) {
+                        let cover = rows[i]['cover']
+
+
+                        let temp_html = `
+                                            <div class="somg-image">
+                                                <img src="${cover}"
+                                                     style="margin-right: 30px;">
+                                            </div>
+
+
+                                 `
+
+                        $('#music-info').append(temp_html)
+                    }
+                }
+            })
+        }
+
+        function listing() {
+            $.ajax({
+                type: "GET",
+                url: "/detail",
+                data: {},
+                success: function (response) {
+                    let rows = response['musics']
+                    for (let i = 0; i < rows.length; i++) {
+                        let title = rows[i]['title']
+                        let singer = rows[i]['singer']
+                        let album = rows[i]['album']
+
+                        let temp_html = `
+
+                                               <h2 class="title">${title}</h2>
+
+                                        <li class="list">
+                                            <span class="attr">
+                                                가수명
+                                            </span>
+                                            <span class="attr">
+                                                ${singer}
+                                            </span>
+                                        </li>
+                                        <li class="list">
+                                            <span class="attr">
+                                                앨범
+                                            </span>
+                                            <span class="attr">
+                                                ${album}
+                                            </span>
+                                        </li>
+
+                                 `
+
+                        $('#song-info').append(temp_html)
+                    }
+                }
+            })
+        }
 
         function add() {
             $.ajax({
@@ -40,15 +107,12 @@
                                             <span class="review-text" id="review-id">
                                                 닉네임
                                             </span>
-
                                             <span class="review-text" id="review-comment">
                                                 ${comment}
                                             </span>
-
                                             <span class="review-text" id="review-star">
                                                 ${star}
                                             </span>
-
                                             <span class="review-text" id="review-time">
                                                 작성시간
                                             </span>
@@ -60,6 +124,7 @@
                 }
             });
         }
+
         function submit() {
 
             let comment = $('#comment').val()
@@ -68,7 +133,7 @@
             $.ajax({
                 type: "POST",
                 url: "/review",
-                data: {  comment_give: comment, star_give: star },
+                data: {comment_give: comment, star_give: star},
                 success: function (response) {
                     alert(response['msg'])
                     window.location.reload()
@@ -79,54 +144,55 @@
 </head>
 <body>
 <div class="page">
-            <header>
-                <h2>뮤플리</h2>
-                <nav>
-                    <ul class="page-header">
-                        <li><a href="#">Main</a></li>
-                        <li><a href="">My Page</a></li>
-                        <li><a href="">Login</a></li>
-                    </ul>
-                </nav>
-            </header>
-        </div>
+    <header>
+        <h2>뮤플리</h2>
+        <nav>
+            <ul class="page-header">
+                <li><a href="#">Main</a></li>
+                <li><a href="">My Page</a></li>
+                <li><a href="">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+</div>
 <hr>
 <div class="main">
-    <div class="music-info">
+    <div class="music-info" id="music-info">
         <div class="somg-image">
-            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjA0MTRfMTI4%2FMDAxNjQ5OTIyMDkwODMx.TfBRxABlc2XcXPkdPd1VzbkSaCSAqr6uKOZTIhBEqmQg.ksx-WbaggR9brqXTDkQbrAOdo79FajgPsnx816AQzjIg.PNG.sue035%2F20220414_164117.png&type=a340" style="margin-right: 30px;">
+            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjA0MTRfMTI4%2FMDAxNjQ5OTIyMDkwODMx.TfBRxABlc2XcXPkdPd1VzbkSaCSAqr6uKOZTIhBEqmQg.ksx-WbaggR9brqXTDkQbrAOdo79FajgPsnx816AQzjIg.PNG.sue035%2F20220414_164117.png&type=a340"
+                 style="margin-right: 30px;">
         </div>
-        <div class="song-info">
+        <div class="song-info" id="song-info">
             <h2 class="title">싸다9</h2>
 
-                <li class="list">
+            <li class="list">
                     <span class="attr">
                         가수명
                     </span>
-                    <span class="attr">
+                <span class="attr">
                         싸이
                     </span>
-                </li>
+            </li>
 
 
-                <li class="list">
+            <li class="list">
                     <span class="attr">
                         발매일자
                     </span>
-                    <span class="attr">
+                <span class="attr">
                         싸이
                     </span>
-                </li>
+            </li>
 
 
-                <li class="list">
+            <li class="list">
                     <span class="attr">
                         가수명
                     </span>
-                    <span class="attr">
+                <span class="attr">
                         싸이
                     </span>
-                </li>
+            </li>
 
             <button class="add-btn" type="button">담기</button>
         </div>
@@ -137,23 +203,23 @@
     <div class="review">
         <h2 class="txt">리뷰 모음</h2>
         <div class="review-moeum" id="review-box">
-                <li class="review-doc">
+            <li class="review-doc">
                     <span class="review-text" id="review-id">
                         닉네임
                     </span>
 
-                    <span class="review-text" id="review-comment">
+                <span class="review-text" id="review-comment">
                         코멘트
                     </span>
 
-                    <span class="review-text" id="review-star">
+                <span class="review-text" id="review-star">
                         별점
                     </span>
 
-                    <span class="review-text" id="review-time">
+                <span class="review-text" id="review-time">
                         작성시간
                     </span>
-                </li>
+            </li>
 
         </div>
     </div>
