@@ -41,7 +41,6 @@
             display: block;
 
             padding:10px 0px 0px 30px;
-
         }
 
         .card-img-top{
@@ -55,17 +54,12 @@
             font-size: 30px;
 
             margin:30px auto auto auto;
-
         }
 
         .main_button{
             width:120px;
 
-
             margin:20px 0px 0px 950px;
-
-
-
         }
 
     </style>
@@ -86,25 +80,29 @@
 
         //붙이기 코드
         function get_list() {
+            //창이 켜지면 송리스트 초기화
             $('#song-list').empty();
             $.ajax({
                 type: "GET",
                 url: "/playlist",
                 data: {},
                 success: function (response) {
+                    //플레이리스트로 받아온 정보들을 플리로 저장할게요
                     let pli = response['playlist'];
-                    for (let i=0; i<pli.length; i++){
+                    for (let i=0; i<50; i++){
+                        //플리의 i 번째 정보에서 title,singer,album,cover 뽑을거에요
                         let title=pli[i]['title'];
                         let singer=pli[i]['singer'];
                         let album=pli[i]['album'];
                         let cover=pli[i]['cover'];
-                        
+
                         // let star_image='⭐'.repeat(star)
+                        // 뽑아낸 정보들을 밑의 형식으로 붙일거에요
                         let temp_html=`<tr>
                                             <td><img src="${cover}" class="card-img-top" alt="..."></td>
-                                            <td>${title}</td>
-                                            <td>${singer}</td>
-                                            <td>${album}</td>
+                                            // <td>${title}</td>
+                                            // <td>${singer}</td>
+                                            // <td>${album}</td>
                                        </tr>`
 
                         $('#song-list').append(temp_html);
@@ -134,29 +132,9 @@
                 </tr>
                 </thead>
                 <tbody id="song-list">
-                <tr>
-<!--                    <th scope="row">1</th>-->
-                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/662/688/82662688_1651196114166_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
-                    <td>That That (Prod. & Feat. SUGA of BTS)</td>
-                    <td>싸이 (Psy) </td>
-                    <td>싸다9</td>
-                </tr>
-                <tr>
-<!--                    <th scope="row">2</th>-->
-                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/624/911/82624911_1649062753955_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
-                    <td>봄여름가을겨울 (Still Life)</td>
-                    <td>BIGBANG (빅뱅)</td>
-                    <td>봄여름가을겨울 (Still Life)</td>
-                </tr>
-                <tr>
-<!--                    <th scope="row">3</th>-->
-                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/624/363/82624363_1649123068092_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
-                    <td>LOVE DIVE</td>
-                    <td>IVE (아이브)</td>
-                    <td>LOVE DIVE</td>
-                </tr>
                 </tbody>
             </table>
+            <p></p>
         </div>
         </div>
     </div>
