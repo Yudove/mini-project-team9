@@ -9,7 +9,7 @@
     <title>Title</title>
     <style>
         .artist-main-info {
-            /*background-color: green;*/
+            /*background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://movie-phinf.pstatic.net/20210715_95/1626338192428gTnJl_JPEG/movie_image.jpg');*/
 
             width: 1200px;
             height: 1500px;
@@ -76,9 +76,9 @@
         }
 
         //노래로 가기
-        function to_song(){
-            window.location.href="/music/${musicId}"
-        }
+        // function to_song(){
+        //     window.location.href="/music/${musicId}"
+        // }
 
         $(document).ready(function () {
             get_list()
@@ -119,7 +119,7 @@
 <!--  마이페이지 제일 큰 틀  -->
     <div class="artist-main-info">
         <div class="mypage">마이 페이지</div>
-        <button type="button" class="btn btn-primary main_button">돌아가기</button>
+        <button type="button" class="btn btn-primary main_button" onclick="to_main()">돌아가기</button>
         <div>
         <div class="mylike"  >
 <!--            밑에 내가 추가한 노래 목록-->
