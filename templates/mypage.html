@@ -87,20 +87,21 @@
         })
 
         function get_list() {
+            // $('#song-list').empty();
             $.ajax({
                 type: "GET",
-                url: "https://www.genie.co.kr/chart/top200?ditc=M&rtm=N&ymd=20210701",
+                url: "/playlist",
                 data: {},
                 success: function (response) {
-                    let rows = response["RealtimeCityAir"]["row"];
+                    let playlist = response['playlist'];
 
-                    for (let i=0;i<rows.length;i++){
-                        let num=rows[i][];
-                        let title=rows[i][];
-                        let img=rows[i][];
-                        let artist=rows[i][];
+                    for (let i=0;i<playlist.length;i++){
+                        let num=playlist[i][a];
+                        let title=playlist[i]['title'];
+                        let singer=playlist[i]['singer'];
+                        let albumtitles=playlist[i]['albumtitles'];
 
-                        let star_image='⭐'.repeat(star)
+                        // let star_image='⭐'.repeat(star)
 
                         let temp_html=`<tr>
                                             <th scope="row">${num}</th>
@@ -108,8 +109,9 @@
                                                     src="${img}"
                                                     class="card-img-top" alt="..."></td>
                                             <td>${title}</td>
-                                            <td>${artist}</td>
-                                            <td>${star_image}</td>
+                                            <td>${singer}</td>
+                                            <td>${albumtitles}</td>
+<!--                                            // <td>${star_image}</td>-->
                                        </tr>`
 
                         $('#song-list').append(temp_html);
@@ -128,33 +130,34 @@
         <div>
         <div class="mylike">
 <!--            밑에 내가 추가한 아티스트목록-->
-            <table class="table">
+            <table class="table" id="song-list">
                 <thead>
                 <tr>
                     <th scope="col">NO.</th>
                     <th scope="col">커버</th>
                     <th scope="col">아티스트</th>
-                    <th scope="col">⭐</th>
+                    <th scope="col">앨범명</th>
+<!--                    <th scope="col">⭐</th>-->
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <th scope="row">1</th>
-                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/110/804/82110804_1624611382361_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
+                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/662/688/82662688_1651196114166_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
                     <td>MSG워너비</td>
-                    <td>@mdo</td>
+                    <td>싸다9</td>
                 </tr>
                 <tr>
                     <th scope="row">2</th>
-                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/049/997/82049997_1621238537359_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
+                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/624/911/82624911_1649062753955_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
                     <td>에스파</td>
-                    <td>@fat</td>
+                    <td>봄여름가을겨울 (Still Life)</td>
                 </tr>
                 <tr>
                     <th scope="row">3</th>
-                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/045/022/82045022_1620896061233_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
-                    <td>이무진</td>
-                    <td>@twitter</td>
+                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/624/363/82624363_1649123068092_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
+                    <td>IVE (아이브)</td>
+                    <td>LOVE DIVE</td>
                 </tr>
                 </tbody>
             </table>
@@ -163,40 +166,40 @@
     </div>
 
 
-<script>
-    function() {
-      var ws = new WebSocket('ws://' + window.location.host + '/jb-server-page?reloadServiceClientId=5');
-      ws.onmessage = function (msg) {
-          if (msg.data === 'reload') {
-              window.location.reload();
-          }
-          if (msg.data.startsWith('update-css ')) {
-              var messageId = msg.data.substring(11);
-              var links = document.getElementsByTagName('link');
-              for (var i = 0; i < links.length; i++) {
-                  var link = links[i];
-                  if (link.rel !== 'stylesheet') continue;
-                  var clonedLink = link.cloneNode(true);
-                  var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);
-                  if (newHref !== link.href) {
-                    clonedLink.href = newHref;
-                  }
-                  else {
-                    var indexOfQuest = newHref.indexOf('?');
-                    if (indexOfQuest >= 0) {
-                      // to support ?foo#hash
-                      clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' +
-                                        newHref.substring(indexOfQuest + 1);
-                    }
-                    else {
-                      clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;
-                    }
-                  }
-                  link.replaceWith(clonedLink);
-              }
-          }
-      };
-};
-</script>
+<!--<script>-->
+<!--    function() {-->
+<!--      var ws = new WebSocket('ws://' + window.location.host + '/jb-server-page?reloadServiceClientId=5');-->
+<!--      ws.onmessage = function (msg) {-->
+<!--          if (msg.data === 'reload') {-->
+<!--              window.location.reload();-->
+<!--          }-->
+<!--          if (msg.data.startsWith('update-css ')) {-->
+<!--              var messageId = msg.data.substring(11);-->
+<!--              var links = document.getElementsByTagName('link');-->
+<!--              for (var i = 0; i < links.length; i++) {-->
+<!--                  var link = links[i];-->
+<!--                  if (link.rel !== 'stylesheet') continue;-->
+<!--                  var clonedLink = link.cloneNode(true);-->
+<!--                  var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);-->
+<!--                  if (newHref !== link.href) {-->
+<!--                    clonedLink.href = newHref;-->
+<!--                  }-->
+<!--                  else {-->
+<!--                    var indexOfQuest = newHref.indexOf('?');-->
+<!--                    if (indexOfQuest >= 0) {-->
+<!--                      // to support ?foo#hash-->
+<!--                      clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' +-->
+<!--                                        newHref.substring(indexOfQuest + 1);-->
+<!--                    }-->
+<!--                    else {-->
+<!--                      clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;-->
+<!--                    }-->
+<!--                  }-->
+<!--                  link.replaceWith(clonedLink);-->
+<!--              }-->
+<!--          }-->
+<!--      };-->
+<!--};-->
+<!--</script>-->
 </body>
 </html>
