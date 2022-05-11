@@ -70,9 +70,9 @@
         }
 
         //노래로 가기
-        // function to_song(){
-        //     window.location.href="/music/${musicId}"
-        // }
+        function to_song(){
+            window.location.href="/music/${musicId}"
+        }
 
         $(document).ready(function () {
             get_list()
@@ -91,19 +91,23 @@
                     let pli = response['playlist'];
                     for (let i=0; i<50; i++){
                         //플리의 i 번째 정보에서 title,singer,album,cover 뽑을거에요
+                        // let id=pli[i]['id']
                         let title=pli[i]['title'];
                         let singer=pli[i]['singer'];
                         let album=pli[i]['album'];
                         let cover=pli[i]['cover'];
+                        let rank=pli[i]['rank'];
 
                         // let star_image='⭐'.repeat(star)
                         // 뽑아낸 정보들을 밑의 형식으로 붙일거에요
-                        let temp_html=`<tr>
-                                            <td><img src="${cover}" class="card-img-top" alt="..."></td>
-                                            // <td>${title}</td>
-                                            // <td>${singer}</td>
-                                            // <td>${album}</td>
-                                       </tr>`
+                        let temp_html=`<tr onclick="to_song">
+                                                <td>${rank}</td>
+                                                <td><img src="${cover}" class="card-img-top" alt="..."></td>
+                                                <td>${title}</td>
+                                                <td>${singer}</td>
+                                                <td>${album}</td>
+                                        </tr>`
+
 
                         $('#song-list').append(temp_html);
                     }
@@ -123,7 +127,7 @@
             <table class="table"  >
                 <thead>
                 <tr>
-<!--                    <th scope="col">NO.</th>-->
+                    <th scope="col">NO.</th>
                     <th scope="col">커버</th>
                     <th scope="col">제목</th>
                     <th scope="col">아티스트</th>
