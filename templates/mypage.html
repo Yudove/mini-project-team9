@@ -9,7 +9,7 @@
     <title>Title</title>
     <style>
         .artist-main-info {
-            /*background-color: green;*/
+            /*background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://movie-phinf.pstatic.net/20210715_95/1626338192428gTnJl_JPEG/movie_image.jpg');*/
 
             width: 1200px;
             height: 1500px;
@@ -41,7 +41,6 @@
             display: block;
 
             padding:10px 0px 0px 30px;
-
         }
 
         .card-img-top{
@@ -50,22 +49,17 @@
         }
 
         .mylike{
-            width:900px;
+            width:1100px;
 
             font-size: 30px;
 
             margin:30px auto auto auto;
-
         }
 
         .main_button{
             width:120px;
 
-
             margin:20px 0px 0px 950px;
-
-
-
         }
 
     </style>
@@ -77,124 +71,77 @@
 
         //노래로 가기
         function to_song(){
-            window.location.href="/"
+            window.location.href="/music/${musicId}"
         }
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script>
         $(document).ready(function () {
             get_list()
         })
 
+        //붙이기 코드
         function get_list() {
+            //창이 켜지면 송리스트 초기화
+            $('#song-list').empty();
             $.ajax({
                 type: "GET",
-                url: "https://www.genie.co.kr/chart/top200?ditc=M&rtm=N&ymd=20210701",
+                url: "/playlist",
                 data: {},
                 success: function (response) {
-                    let rows = response["RealtimeCityAir"]["row"];
+                    //플레이리스트로 받아온 정보들을 플리로 저장할게요
+                    let pli = response['playlist'];
+                    for (let i=0; i<50; i++){
+                        //플리의 i 번째 정보에서 title,singer,album,cover 뽑을거에요
+                        // let id=pli[i]['id']
+                        let title=pli[i]['title'];
+                        let singer=pli[i]['singer'];
+                        let album=pli[i]['album'];
+                        let cover=pli[i]['cover'];
+                        let rank=pli[i]['rank'];
 
-                    let num=rows[i][];
-                    let title=rows[i][];
-                    let img=rows[i][];
-                    let artist=rows[i][];
+                        // let star_image='⭐'.repeat(star)
+                        // 뽑아낸 정보들을 밑의 형식으로 붙일거에요
+                        let temp_html=`<tr onclick="to_song">
+                                                <td>${rank}</td>
+                                                <td><img src="${cover}" class="card-img-top" alt="..."></td>
+                                                <td>${title}</td>
+                                                <td>${singer}</td>
+                                                <td>${album}</td>
+                                        </tr>`
 
-                    let star_image='⭐'.repeat(star)
 
-                    let temp_html=`<tr>
-                                        <th scope="row">${num}</th>
-                                        <td><img
-                                                src="${img}"
-                                                class="card-img-top" alt="..."></td>
-                                        <td>${title}</td>
-                                        <td>${artist}</td>
-                                        <td>${star_image}</td>
-                                   </tr>`
-
-                    $('#song-list').append(temp_html);
+                        $('#song-list').append(temp_html);
+                    }
                 }
             })
         }
-    </script>
     </script>
 </head>
 <body>
 <!--  마이페이지 제일 큰 틀  -->
     <div class="artist-main-info">
         <div class="mypage">마이 페이지</div>
-        <button type="button" class="btn btn-primary main_button">돌아가기</button>
+        <button type="button" class="btn btn-primary main_button" onclick="to_main()">돌아가기</button>
         <div>
-        <div class="mylike">
-<!--            밑에 내가 추가한 아티스트목록-->
-            <table class="table">
+        <div class="mylike"  >
+<!--            밑에 내가 추가한 노래 목록-->
+            <table class="table"  >
                 <thead>
                 <tr>
                     <th scope="col">NO.</th>
                     <th scope="col">커버</th>
+                    <th scope="col">제목</th>
                     <th scope="col">아티스트</th>
-                    <th scope="col">⭐</th>
+                    <th scope="col">앨범명</th>
+<!--                    <th scope="col">⭐</th>-->
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/110/804/82110804_1624611382361_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
-                    <td>MSG워너비</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/049/997/82049997_1621238537359_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
-                    <td>에스파</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td><img src="https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/045/022/82045022_1620896061233_1_140x140.JPG/dims/resize/Q_80,0" class="card-img-top" alt="..."></td>
-                    <td>이무진</td>
-                    <td>@twitter</td>
-                </tr>
+                <tbody id="song-list">
                 </tbody>
             </table>
+            <p></p>
         </div>
         </div>
     </div>
 
-
-<script>
-    function() {
-      var ws = new WebSocket('ws://' + window.location.host + '/jb-server-page?reloadServiceClientId=5');
-      ws.onmessage = function (msg) {
-          if (msg.data === 'reload') {
-              window.location.reload();
-          }
-          if (msg.data.startsWith('update-css ')) {
-              var messageId = msg.data.substring(11);
-              var links = document.getElementsByTagName('link');
-              for (var i = 0; i < links.length; i++) {
-                  var link = links[i];
-                  if (link.rel !== 'stylesheet') continue;
-                  var clonedLink = link.cloneNode(true);
-                  var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);
-                  if (newHref !== link.href) {
-                    clonedLink.href = newHref;
-                  }
-                  else {
-                    var indexOfQuest = newHref.indexOf('?');
-                    if (indexOfQuest >= 0) {
-                      // to support ?foo#hash
-                      clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' +
-                                        newHref.substring(indexOfQuest + 1);
-                    }
-                    else {
-                      clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;
-                    }
-                  }
-                  link.replaceWith(clonedLink);
-              }
-          }
-      };
-};
-</script>
 </body>
 </html>
