@@ -16,15 +16,12 @@ data = requests.get('https://www.genie.co.kr/chart/top200', headers=headers)
 
 # HTML을 BeautifulSoup이라는 라이브러리를 활용해 검색하기 용이한 상태로 만듦
 soup = BeautifulSoup(data.text, 'html.parser')
-#body-content > div.newest-list > div > table > tbody > tr:nth-child(1) > td:nth-child(3) > a > span
-#body-content > div.newest-list > div > table > tbody > tr:nth-child(2) > td:nth-child(3) > a > span
 
-#body-content > div.newest-list > div > table > tbody > tr:nth-child(2) > td:nth-child(3) > a > img
-#body-content > div.newest-list > div > table > tbody > tr:nth-child(1) > td:nth-child(3) > a > img
 musics =soup.select('#body-content > div.newest-list > div > table > tbody > tr')
 
 for music in musics:
-    a = music.select_one('td.info > a.title.ellipsis').text
+    a = music.select_one('td.info > a.title.ellipsis').text.strip()
+    if a[0:3] == '19금': a = a[4:].strip()
     singer = music.select_one('td.info > a.artist.ellipsis').text
     album = music.select_one('td.info > a.albumtitle.ellipsis').text
     cover = music.select_one('td:nth-child(3) > a > img')['src']
@@ -36,13 +33,14 @@ for music in musics:
     db.musics.insert_one(doc)
 
 
+
 @app.route('/')
 def home():
    return render_template('mainpage.html')
 
-@app.route('/mypage')
+@app.route('/index')
 def mypage():
-   return render_template('mypage.html')
+   return render_template('index.html')
 
 @app.route('/detail')
 def review():
@@ -50,9 +48,13 @@ def review():
 
 
 
+
+
+
 @app.route('/musiclist', methods=['GET'])
 def web_musiclist_get():
          music_list = list(db.musics.find({}, {'_id': False}))
+
          return jsonify({'musics': music_list})
 
 
