@@ -2,11 +2,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <title>Title</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://kit.fontawesome.com/c1651245ed.js" crossorigin="anonymous"></script>
+    <script src="../static/js/logout.js"></script>
+    <title>메인페이지</title>
     <style>
         .artist-main-info {
             /*background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://movie-phinf.pstatic.net/20210715_95/1626338192428gTnJl_JPEG/movie_image.jpg');*/
@@ -62,6 +65,29 @@
             margin:20px 0px 0px 950px;
         }
 
+        .test {
+            display: flex;
+        }
+
+        .album {
+            width: 100px;
+            height: 100px;
+            background-color: lightgray;
+            margin: 10px;
+            font-size: 30px;
+        }
+
+        .album.special {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: red;
+        }
+
+        .album span{
+            font-size: 30px;
+        }
     </style>
     <script>
 <!--    메인으로 돌아가는 기능    -->
@@ -69,79 +95,65 @@
             window.location.href="/"
         }
 
-        //노래로 가기
-        function to_song(){
+        // 노래 상세페이지로 이동
+        function to_detail(){
             window.location.href="/music/${musicId}"
-        }
-
-        $(document).ready(function () {
-            get_list()
-        })
-
-        //붙이기 코드
-        function get_list() {
-            //창이 켜지면 송리스트 초기화
-            $('#song-list').empty();
-            $.ajax({
-                type: "GET",
-                url: "/playlist",
-                data: {},
-                success: function (response) {
-                    //플레이리스트로 받아온 정보들을 플리로 저장할게요
-                    let pli = response['playlist'];
-                    for (let i=0; i<50; i++){
-                        //플리의 i 번째 정보에서 title,singer,album,cover 뽑을거에요
-                        // let id=pli[i]['id']
-                        let title=pli[i]['title'];
-                        let singer=pli[i]['singer'];
-                        let album=pli[i]['album'];
-                        let cover=pli[i]['cover'];
-                        let rank=pli[i]['rank'];
-
-                        // let star_image='⭐'.repeat(star)
-                        // 뽑아낸 정보들을 밑의 형식으로 붙일거에요
-                        let temp_html=`<tr onclick="to_song">
-                                                <td>${rank}</td>
-                                                <td><img src="${cover}" class="card-img-top" alt="..."></td>
-                                                <td>${title}</td>
-                                                <td>${singer}</td>
-                                                <td>${album}</td>
-                                        </tr>`
-
-
-                        $('#song-list').append(temp_html);
-                    }
-                }
-            })
         }
     </script>
 </head>
 <body>
+    <header>
+        <div class="logo">
+            <a href="/"><i class="fa-brands fa-spotify fa-3x"></i></a>
+        </div>
+        <nav class="nav-bar">
+            <ul class="nav__item">
+                {% set token = token %}
+                {% if token %}
+                    <a href="/">
+                        <li class="nav__list">메인페이지</li>
+                    </a>
+                    <a>
+                        <li id="logout" onclick="logout()" class="nav__list">로그아웃</li>
+                    </a>
+                {% else %}
+                    <a href="/">
+                        <li class="nav__list">메인페이지</li>
+                    </a>
+                    <a href="/loginForm">
+                        <li class="nav__list">로그인</li>
+                    </a>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <div>
+        <h1 style="font-size: 50px;">{{ id }}</h1>
+        {% for i in mypli %}
+            <h1>{{ i['id'] }}<h1>
+            {{ i['index'] }}
+            <img src="{{ i['cover'] }}" />
+        {% endfor %}
 <!--  마이페이지 제일 큰 틀  -->
     <div class="artist-main-info">
-        <div class="mypage">마이 페이지</div>
-        <button type="button" class="btn btn-primary main_button" onclick="to_main()">돌아가기</button>
-        <div>
-        <div class="mylike"  >
-<!--            밑에 내가 추가한 노래 목록-->
-            <table class="table"  >
-                <thead>
-                <tr>
-                    <th scope="col">NO.</th>
-                    <th scope="col">커버</th>
-                    <th scope="col">제목</th>
-                    <th scope="col">아티스트</th>
-                    <th scope="col">앨범명</th>
-<!--                    <th scope="col">⭐</th>-->
-                </tr>
-                </thead>
-                <tbody id="song-list">
-                </tbody>
-            </table>
-            <p></p>
+        <h1 style="font-size: 40px; color: red">{{ id }}님의 플레이리스트</h1>
+        <div class="test">
+            <div class="album">1번</div>
+            <div class="album">2번</div>
+            <div class="album special">
+                <span>앨범명</span>
+                <span>곡 제목</span>
+                <span>가수명</span>
+            </div>
+            <div class="album">3번</div>
+            <div class="album">4번</div>
         </div>
+
+
+        <div class="mylike" >
+<!--           밑에 내가 추가한 노래 목록 -->
+
         </div>
     </div>
-
 </body>
 </html>

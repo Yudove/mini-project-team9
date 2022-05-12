@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient
 import requests
 from bs4 import BeautifulSoup
-
+import certifi
 import jwt
 import datetime
 import hashlib
@@ -18,10 +18,11 @@ SECRET_KEY = 'likeMusic'
 from . import login       #from . import login : login.py의 내용을 호출하겠다.
 from . import detail
 from . import main
+from . import mypage
 
 app = Flask(__name__)
 
 app.register_blueprint(login.blueprint)
 app.register_blueprint(detail.blueprint)
 app.register_blueprint(main.blueprint)
-# app.register_blueprint(mypage.blueprint) (detail.blueprint) detail.py에서 사용할 blueprint객체를 blueprint로 설정할거야
+app.register_blueprint(mypage.blueprint) # (detail.blueprint) detail.py에서 사용할 blueprint객체를 blueprint로 설정할거야

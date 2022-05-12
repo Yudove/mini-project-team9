@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -15,16 +14,11 @@
     <link rel="stylesheet" type="text/css" href="../static/detailstyle.css">
     <link rel="stylesheet" href="../static/css/style.css">
     <title>상세페이지</title>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-
-
         $(document).ready(function () {
             add();
-            id();
         });
-
         function add() {
             $.ajax({
                 type: "GET",
@@ -33,11 +27,17 @@
                 success: function (response) {
                     let rows = response['reviews']
                     for (let i = 0; i < rows.length; i++) {
+                        let rank = rows[i]['rank']
                         let comment = rows[i]['comment']
                         let star = rows[i]['star']
                         let id = rows[i]['id']
 
-                        let temp_html = `<li class="review-doc">
+                        let star_image = '⭐'.repeat(star)
+
+                        let temp_html = ``
+
+                        if ("{{rank}}" == rank) {
+                            temp_html = `<li class="review-doc">
                                             <span class="review-text" id="review-id">
                                                 ${id}
                                             </span>
@@ -45,30 +45,31 @@
                                                 ${comment}
                                             </span>
                                             <span class="review-text" id="review-star">
-                                                ${star}
-                                            </span>
-                                            <span class="review-text" id="review-time">
-                                                작성시간
+                                                ${star_image}
                                             </span>
                                         </li>`
+                        } else {
+                            temp_html = ``
+                        }
                         $('#review-box').append(temp_html)
                     }
-
                 }
             });
         }
-        function submit() {
 
-            let rank = $().val()
+        function submit() {
             let comment = $('#comment').val()
             let star = $("input[name='rating']:checked").val()
+            let rank = "{{rank}}"
 
             $.ajax({
                 type: "POST",
                 url: "/review",
-                data: {comment_give: comment, star_give: star},
+
+                data: {comment_give: comment, star_give: star, rank_give: rank},
                 success: function (response) {
-                    if(response.result == 'fail') {
+
+                    if (response.result == 'fail') {
                         alert(response['msg']);
                         location.href = '/loginForm';
                     } else {
@@ -78,40 +79,97 @@
                 }
             })
         }
+
+        function get() {
+            let cover = "{{cover}}"
+            let singer = "{{singer}}"
+            let album = "{{album}}"
+            let title = "{{title}}"
+
+            $.ajax({
+                type: "POST",
+                url: "/detail",
+                data: {cover_give: cover, title_give: title, singer_give: singer, album_give: album,},
+                success: function (response) {
+                     if (response.result == 'fail') {
+                        alert(response['msg']);
+                        location.href = '/loginForm';
+                    } else {
+                        alert('담기에 성공하셨습니다.');
+                        location.reload();
+                    }
+                }
+            })
+        }
+
+        function remove(rank) {
+            alert(rank)
+            $.ajax({
+                type: "POST",
+                url: "/remove",
+                data: {},
+                success: function (response) {
+                    alert('담기 취소하였습니다.')
+                }
+            })
+        }
+
+        function remove() {
+            let cover = "{{cover}}"
+            let singer = "{{singer}}"
+            let album = "{{album}}"
+            let title = "{{title}}"
+
+
+            $.ajax({
+                type: "POST",
+                url: "/detail",
+                data: {cover_give: cover, title_give: title, singer_give: singer, album_give: album},
+                success: function (response) {
+                     if (response.result == 'fail') {
+                        alert(response['msg']);
+                        location.href = '/loginForm';
+                    } else {
+                        alert('취소에 성공하셨습니다.');
+                        location.reload();
+                    }
+                }
+            })
+        }
     </script>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <a href="/"><i class="fa-brands fa-spotify fa-3x"></i></a>
-        </div>
-        <nav class="nav-bar">
-            <ul class="nav__item">
-                {% set token = token %}
-                {% if token %}
-                    <a href="#">
-                        <li class="nav__list">마이페이지</li>
-                    </a>
-                    <a onclick="logout()">
-                        <li class="nav__list">로그아웃</li>
-                    </a>
-                {% else %}
-                    <a href="/loginForm">
-                        <li class="nav__list">로그인</li>
-                    </a>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
+
+<header>
+    <div class="logo">
+        <a href="/"><i class="fa-brands fa-spotify fa-3x"></i></a>
+    </div>
+    <nav class="nav-bar">
+        <ul class="nav__item">
+            {% set token = token %}
+            {% if token %}
+            <a href="#">
+                <li class="nav__list">마이페이지</li>
+            </a>
+            <a onclick="logout()">
+                <li class="nav__list">로그아웃</li>
+            </a>
+            {% else %}
+            <a href="/loginForm">
+                <li class="nav__list">로그인</li>
+            </a>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
 <div class="main">
     <div class="music-info" id="music-info">
+        <h1 style="font-size: 50px;">{{ singer }}</h1>
         <div class="song-image">
             <img src="{{ cover }}"
                  style="margin-right: 30px;">
         </div>
         <div class="song-info" id="song-info">
-            <h2 class="title">{{ title }}</h2>
-
             <li class="list">
                     <span class="attr">
                         가수명
@@ -120,9 +178,7 @@
                         {{ singer }}
                     </span>
             </li>
-
-
-            <li class="list">
+            <li class="list" >
                     <span class="attr">
                          앨범
                     </span>
@@ -130,12 +186,23 @@
                         {{ album }}
                     </span>
             </li>
+            <li>
+            <h1>{{ done }}</h1>
+                {% if done == 0 %}
+                    <button onclick="remove({{ rank }})">등록 취소</button>
+                {% else %}
+                    <button onclick="get()">등록</button>
+                {% endif %}
+            </li>
+            <!--
+            <li>
+                <button onclick="get()" class="submit-btn" type="button">등록</button>
+            </li>
+            -->
 
-            <button class="add-btn" type="button">담기</button>
         </div>
 
     </div>
-
     <hr>
     <div class="review">
         <h2 class="txt">리뷰 모음</h2>
@@ -144,24 +211,17 @@
                     <span class="review-text" id="review-id">
                         닉네임
                     </span>
-
                 <span class="review-text" id="review-comment">
                         코멘트
                     </span>
-
                 <span class="review-text" id="review-star">
                         별점
                     </span>
-
-                <span class="review-text" id="review-time">
-                        작성시간
-                    </span>
             </li>
-
         </div>
     </div>
     <hr>
-    <div class="footer">
+    <div class="footer" id="footer">
 
         <h3>리뷰 작성</h3>
 
@@ -181,6 +241,5 @@
     </div>
 </div>
 <hr>
-
 </body>
 </html>

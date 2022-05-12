@@ -30,17 +30,19 @@
                         let album = rows[i]['album']
                         let cover = rows[i]['cover']
                         let temp_html =
-                            `<div>
-                                    <a href='/detail?rank=${rank}&title=${title}&singer=${singer}&album=${album}&cover=${cover}'>
-                                    <tr class="lists">
-                                    <th id="rank">${rank}</th>
-                                    <th id="title">${title}</th>
-                                    <td id="cover"><img src="${cover}"></td>
-                                    <td id="singer">${singer}</td>
-                                    <td id="album">${album}</td>
+                            `
+
+
+                                    <tr onclick="location.href='/detail?rank=${rank}&title=${title}&singer=${singer}&album=${album}&cover=${cover}'" class="lists">
+                                    <th scope="row" >${rank}</th>
+                                    <td >${title}</td>
+                                    <td >${singer}</td>
+                                    <td ><img src="${cover}"></td>
+                                    <td >${album}</td>
                                     <td><button  type="button"  class="btn btn-outline-success" >담기</button></td>
-                                    <td><button type="button" class="btn btn-primary">리뷰 남기기</button></td>
-                             </tr></a></div>`
+
+                             </tr>`
+                            console.log(rows)
 
                         $('#show_list').append(temp_html)
 
@@ -72,7 +74,6 @@
             })
         }
     </script>
-
     <title>뮤플리 - 메인페이지</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
@@ -86,7 +87,7 @@
             width: 100%;
             height: 250px;
 
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://movie-phinf.pstatic.net/20210715_95/1626338192428gTnJl_JPEG/movie_image.jpg');
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('');
             background-position: center;
             background-size: cover;
 
@@ -164,7 +165,7 @@
                 <ul class="nav__item">
                     {% set token = token %}
                     {% if token %}
-                        <a href="#">
+                        <a href="/mypage?id={{ id }}">
                             <li class="nav__list">마이페이지</li>
                         </a>
                         <a>
@@ -180,14 +181,17 @@
         </header>
         <div class="mytitle">
         </div>
-        <table class="table">
+        <table class="table table-hover">
             <thead>
             <tr class="category">
-                <th scope="col">목록</th>
-                <th scope="col">커버</th>
-                <th scope="col">아티스트</th>
-                <th scope="col">앨범</th>
+                <th scope="col">순위</th>
+                <th scope="col">제목</th>
+                <th scope="col">가수</th>
+                <th scope="col">앨범커버</th>
+                <th scope="col">앨범명</th>
                 <th scope="col">담기</th>
+
+
             </tr>
             </thead>
             <tbody id="show_list">
